@@ -39,16 +39,8 @@ public class RequestUtil {
 
                 if(volleyError.networkResponse!=null)
                 {
-                    if(volleyError.networkResponse.statusCode == 401)
-                    {
-
-                    }
-                    else
-                    {
                         Log.e("Volley Error", Arrays.toString(volleyError.networkResponse.data));
                         Toast.makeText(context, "An error has occurred while making the request", Toast.LENGTH_LONG).show();
-                    }
-
                 }
                 else
                 {
