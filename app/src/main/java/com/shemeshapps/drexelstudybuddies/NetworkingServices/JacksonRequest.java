@@ -1,12 +1,12 @@
 package com.shemeshapps.drexelstudybuddies.NetworkingServices;
 
-import com.android.volley.Cache;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
+import com.shemeshapps.drexelstudybuddies.Helpers.genAuthToken;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,12 +19,20 @@ import java.util.Map;
 public class JacksonRequest<T> extends JsonRequest<T> {
     private Class<T> responseType;
     private int method;
+    private String url;
+    private boolean putAuthKey;
 
-    public JacksonRequest(int method, String url, Object requestData, Class<T> responseType, Response.Listener<T> listener, Response.ErrorListener errorListener)
+    public JacksonRequest(int method, String url, Object requestData, Class<T> responseType, Response.Listener<T> listener, Response.ErrorListener errorListener,boolean putAuthKey)
     {
         super((method==Method.PUT)?Method.POST:method, url, (requestData == null) ? null : Mapper.string(requestData), listener, errorListener);
         this.responseType = responseType;
         this.method = method;
+        this.url = url;
+        this.putAuthKey = putAuthKey;
+        setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
     @Override
@@ -49,7 +57,10 @@ public class JacksonRequest<T> extends JsonRequest<T> {
         {
             params.put("X-Http-Method-Override","PUT");
         }
-
+        if(putAuthKey)
+        {
+            params.put("Authorization", genAuthToken.getTokenHeader(url));
+        }
         return params;
     }
 

@@ -12,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.shemeshapps.drexelstudybuddies.Models.LoginRequest;
+import com.shemeshapps.drexelstudybuddies.Models.LoginResponse;
 
 import java.util.Arrays;
 
@@ -24,7 +25,7 @@ public class RequestUtil {
     public static RequestQueue queue;
     public static ImageLoader imageLoader;
     private static Response.ErrorListener errorListener;
-    private static Context context;
+    public static Context context;
 
     public static void init(final Context context)
     {
@@ -32,11 +33,9 @@ public class RequestUtil {
         queue = Volley.newRequestQueue(context);
         ImageLoader.ImageCache imageCache = new BitmapLruCache();
         imageLoader = new ImageLoader(Volley.newRequestQueue(context), imageCache);
-
         errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-
                 if(volleyError.networkResponse!=null)
                 {
                         Log.e("Volley Error", Arrays.toString(volleyError.networkResponse.data));
@@ -58,7 +57,14 @@ public class RequestUtil {
         r.Password = password;
         r.UserId = userid;
 
-        RequestUtil.queue.add(new JacksonRequest<>(Request.Method.PUT,url,r, Object.class,listener,errorListener));
+        RequestUtil.queue.add(new JacksonRequest<>(Request.Method.PUT,url,r, LoginResponse.class,listener,errorListener,false));
+    }
+
+    public static void getCurrentClasses(Response.Listener listener)
+    {
+        //String url = "https://d1m.drexel.edu/API/v2.0/Student/CourseCalendars/";
+        String url = "https://d1m.drexel.edu/API/v2.0/ViewModel/MeDelta";
+        RequestUtil.queue.add(new JacksonRequest<>(Request.Method.GET,url,null, Object.class,listener,errorListener,true));
     }
 
 }
