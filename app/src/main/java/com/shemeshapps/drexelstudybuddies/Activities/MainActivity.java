@@ -1,9 +1,12 @@
 package com.shemeshapps.drexelstudybuddies.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.android.volley.Response;
 import com.shemeshapps.drexelstudybuddies.NetworkingServices.RequestUtil;
@@ -17,13 +20,24 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RequestUtil.getCurrentClasses(new Response.Listener() {
-            @Override
-            public void onResponse(Object response) {
-                int test = 1;
-                test++;
+        final Button crt_grp = (Button) findViewById(R.id.create_grp);
+
+        crt_grp.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,CreateGroupActivity.class);
+                startActivity(intent);
             }
         });
+
+        final Button grp_cal = (Button) findViewById(R.id.avail_grp);
+
+        grp_cal.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,GroupCalendar.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
 }
