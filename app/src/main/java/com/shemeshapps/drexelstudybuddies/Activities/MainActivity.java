@@ -16,14 +16,6 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        RequestUtil.getCurrentClasses(new Response.Listener() {
-            @Override
-            public void onResponse(Object response) {
-                int test = 1;
-                test++;
-            }
-        });
     }
 
 }
