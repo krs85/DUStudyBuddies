@@ -33,8 +33,9 @@
         android:layout_gravity="center_horizontal"
         android:text="Suggested Study Groups:"/>
 
-    <ListView
+    <ExpandableListView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
+        android:layout_height="fill_parent"
+        android:id="@+id/suggestedStudyGroupList"/>
 
 </LinearLayout>

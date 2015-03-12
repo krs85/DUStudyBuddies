@@ -67,4 +67,9 @@ public class RequestUtil {
         RequestUtil.queue.add(new JacksonRequest<>(Request.Method.GET,url,null, Object.class,listener,errorListener,true));
     }
 
+    public static void logout()
+    {
+
+    }
+
 }
