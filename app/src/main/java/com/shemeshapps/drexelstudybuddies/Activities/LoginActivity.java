@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -18,13 +19,14 @@ import com.shemeshapps.drexelstudybuddies.R;
 
 public class LoginActivity extends ActionBarActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkIfLoggedIn();
         setContentView(R.layout.activity_login);
 
-
+        final ProgressBar loadingBar = (ProgressBar)findViewById(R.id.login_loading);
         final EditText password = (EditText)findViewById(R.id.password_login);
         final EditText username = (EditText)findViewById(R.id.username_login);
         Button login = (Button)findViewById(R.id.login_button);
@@ -32,17 +34,20 @@ public class LoginActivity extends ActionBarActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loadingBar.setVisibility(View.VISIBLE);
                 RequestUtil.getAuthCode(username.getText().toString(),password.getText().toString(),new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
                         saveAuthKey((LoginResponse)response);
                         login();
+                        finish();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),"INCORRECT PASSWORD",Toast.LENGTH_SHORT).show();
+                        loadingBar.setVisibility(View.GONE);
                     }
                 });
             }

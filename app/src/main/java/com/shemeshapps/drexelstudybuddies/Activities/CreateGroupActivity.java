@@ -1,13 +1,5 @@
 package com.shemeshapps.drexelstudybuddies.Activities;
 
-/***
- *    Application Name : MessageBox
- *    Author : Vimal Rughani
- *    Website : http://pulse7.net
- *    Android SDK : 2.2
- *    For more details visit http://pulse7.net/android/date-picker-dialog-time-picker-dialog-android/
- */
-
 import java.util.Calendar;
 
 import android.app.Activity;

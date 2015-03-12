@@ -1,27 +1,40 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
 
     <Button
         android:layout_width="fill_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
-        android:text="Available Groups"
+        android:text="Browse Study Groups"
         android:id="@+id/avail_grp"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/create_grp"
-        android:layout_alignEnd="@+id/create_grp" />
+         />
 
     <Button
         android:layout_width="fill_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_height="wrap_content"
-        android:text="Create Group"
-        android:id="@+id/create_grp"
-        android:onClick="showTimePickerDialog"
-        android:layout_below="@+id/avail_grp"
-        android:layout_centerHorizontal="true" />
+        android:text="Create Study Group"
+        android:id="@+id/create_grp" />
 
-</RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Suggested Study Groups:"/>
+
+    <ListView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
+
+</LinearLayout>
