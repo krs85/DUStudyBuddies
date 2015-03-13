@@ -38,7 +38,6 @@ public class CreateGroupActivity extends Activity {
         txtLocation = (EditText)findViewById(R.id.location_txt);
         txtDescr = (EditText)findViewById(R.id.desc_txt);
 
-
         final Calendar c = Calendar.getInstance();
         mStartHour = c.get(Calendar.HOUR_OF_DAY);
         mStartMinute = c.get(Calendar.MINUTE);
@@ -65,6 +64,7 @@ public class CreateGroupActivity extends Activity {
                                     txtDate.setError(null);
                                 }
                             }, mYear, mMonth, mDay);
+                    dpd.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                     dpd.show();
             }
 
@@ -86,6 +86,7 @@ public class CreateGroupActivity extends Activity {
                                     txtStartTime.setError(null);
                                 }
                             }, mStartHour, mStartMinute, false);
+
                     tpd.show();
 
                 }
@@ -144,6 +145,15 @@ public class CreateGroupActivity extends Activity {
                 }
             }
         }
+
+        /*
+        HERE TO CHECK FOR IF END TIME IS BEFORE START,
+        START TIME IS BEFORE RIGHT NOW,
+        NOT MORE THAN 2 WEEKS AHEAD OF TIME
+
+        if so do ex: txtEndTime.setError("Start time before end");
+                     missingField = true;
+         */
 
         if(!missingField)
         {
