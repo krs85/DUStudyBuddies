@@ -62,7 +62,6 @@ public class LoginActivity extends ActionBarActivity {
             public void onResponse(Object response) {
                 saveUserClasses((DrexelClass[]) response);
                 login();
-                finish();
             }
         });
     }
@@ -101,6 +100,7 @@ public class LoginActivity extends ActionBarActivity {
     {
         Intent i = new Intent(this,MainActivity.class);
         startActivity(i);
+        finish();
     }
 
     private void checkIfLoggedIn()
