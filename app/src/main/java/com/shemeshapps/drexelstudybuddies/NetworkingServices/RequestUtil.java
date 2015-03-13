@@ -87,12 +87,16 @@ public class RequestUtil {
         RequestUtil.queue.add(new JacksonRequest<>(Request.Method.GET,url,null, Object.class,listener,errorListener,true));
     }
 
-    public static void postStudyGroup(Group studyGroup)
+    public static void postStudyGroup(Group g)
     {
         String url = "https://d1m.drexel.edu/API/v2.0/User/Roles";
         ParseObject study = new ParseObject("StudyGroup");
-        study.put("Class", "cs283");
-
+        study.put("Class", g.course);
+        study.put("Name",g.groupName);
+        study.put("Location",g.location);
+        study.put("Description",g.description);
+        study.put("StartTime",g.startTime);
+        study.put("EndTime",g.endTime);
         study.put("Authorization", GenAuthorization.GetTokenHeader(url));
 
         study.saveInBackground();

@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:layout_gravity="center_vertical"
     android:padding="30dp"
+    android:id="@+id/createGroupRoot"
     tools:context="com.shemeshapps.drexelstudybuddies.Activities.CreateGroupActivity">
 
     <EditText

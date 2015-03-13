@@ -1,23 +1,17 @@
 package com.shemeshapps.drexelstudybuddies.Models;
 
+import java.util.Date;
+
 /**
  * Created by bret on 3/11/15.
  */
 public class Group {
     public String groupName;
-    public String date;
-    public String startTime;
-    public String endTime;
+    public String description;
+    public Date startTime;
+    public Date endTime;
     public String location;
     public String course;
 
     public Group(){}
-    public Group(String groupName, String date, String startTime, String endTime, String location, String course) {
-        this.groupName = groupName;
-        this.date = date;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.location = location;
-        this.course = course;
-    }
 }
