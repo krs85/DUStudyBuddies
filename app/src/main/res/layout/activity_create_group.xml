@@ -4,27 +4,25 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:layout_gravity="center_vertical"
-
+    android:padding="30dp"
     tools:context="com.shemeshapps.drexelstudybuddies.Activities.CreateGroupActivity">
 
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/grp_name"
-        android:layout_marginTop="50dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
-        android:hint="Enter Study Group Name"/>
+        android:layout_marginTop="0dp"
+
+        android:hint="Study Group Name"/>
 
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:inputType="date"
         android:id="@+id/date_txt"
-        android:layout_marginRight="75dp"
-        android:layout_marginLeft="75dp"
-        android:layout_marginTop="20dp"
-        android:hint="date"
+
+        android:layout_marginTop="0dp"
+        android:hint="Date"
         android:focusable="false"
         android:focusableInTouchMode="false"/>
 
@@ -32,9 +30,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/start_time_txt"
-        android:layout_marginRight="75dp"
-        android:layout_marginLeft="75dp"
-        android:hint="start time"
+
+        android:hint="Start Time"
         android:focusable="false"
         android:focusableInTouchMode="false"/>
 
@@ -43,26 +40,31 @@
         android:layout_height="wrap_content"
         android:inputType="time"
         android:id="@+id/end_time_txt"
-        android:layout_marginRight="75dp"
-        android:layout_marginLeft="75dp"
-        android:hint="end time"
+
+        android:hint="End Time"
         android:focusable="false"
         android:focusableInTouchMode="false"/>
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/location_txt"
-        android:layout_marginRight="75dp"
-        android:layout_marginLeft="75dp"
-        android:layout_marginTop="30dp"
-        android:hint="location" />
+
+        android:layout_marginTop="0dp"
+        android:hint="Location and Room" />
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/course_txt"
-        android:layout_marginRight="75dp"
-        android:layout_marginLeft="75dp"
-        android:hint="course" />
+        android:singleLine="true"
+        android:hint="Course eg: cs101" />
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/desc_txt"
+        android:singleLine="false"
+        android:lines="5"
+        android:gravity="top"
+        android:hint="Description/Notes" />
 
     <Button
         android:layout_width="wrap_content"

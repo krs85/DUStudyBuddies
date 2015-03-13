@@ -11,7 +11,7 @@ public class Group {
     public String location;
     public String course;
 
-
+    public Group(){}
     public Group(String groupName, String date, String startTime, String endTime, String location, String course) {
         this.groupName = groupName;
         this.date = date;

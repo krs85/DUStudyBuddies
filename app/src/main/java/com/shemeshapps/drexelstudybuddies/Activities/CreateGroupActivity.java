@@ -1,6 +1,7 @@
 package com.shemeshapps.drexelstudybuddies.Activities;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -14,6 +15,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import com.shemeshapps.drexelstudybuddies.Helpers.Utils;
 import com.shemeshapps.drexelstudybuddies.R;
 
 public class CreateGroupActivity extends Activity {
@@ -31,57 +33,49 @@ public class CreateGroupActivity extends Activity {
         txtStartTime = (EditText) findViewById(R.id.start_time_txt);
         txtEndTime = (EditText) findViewById(R.id.end_time_txt);
 
-
+        final Calendar c = Calendar.getInstance();
+        mStartHour = c.get(Calendar.HOUR_OF_DAY);
+        mStartMinute = c.get(Calendar.MINUTE);
+        mEndHour = c.get(Calendar.HOUR_OF_DAY);
+        mEndMinute = c.get(Calendar.MINUTE);
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
 
         txtDate.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                    TextKeyListener.clear((txtDate).getText());
-                    final Calendar c = Calendar.getInstance();
-                    mYear = c.get(Calendar.YEAR);
-                    mMonth = c.get(Calendar.MONTH);
-                    mDay = c.get(Calendar.DAY_OF_MONTH);
-
-                    // Launch Date Picker Dialog
                     DatePickerDialog dpd = new DatePickerDialog(CreateGroupActivity.this,
                             new DatePickerDialog.OnDateSetListener() {
 
                                 @Override
                                 public void onDateSet(DatePicker view, int year,
                                                       int monthOfYear, int dayOfMonth) {
-                                    // Display Selected date in textbox
-                                    txtDate.setText(dayOfMonth + "-"
-                                            + (monthOfYear + 1) + "-" + year);
-
+                                    mYear = year;
+                                    mMonth = monthOfYear;
+                                    mDay = dayOfMonth;
+                                    txtDate.setText((monthOfYear + 1) + "/" + dayOfMonth+ "/" + year);
                                 }
                             }, mYear, mMonth, mDay);
                     dpd.show();
-
-
-
             }
 
         });
+
 
         txtStartTime.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                    TextKeyListener.clear((txtStartTime).getText());
-                    final Calendar c = Calendar.getInstance();
-                    mStartHour = c.get(Calendar.HOUR_OF_DAY);
-                    mStartMinute = c.get(Calendar.MINUTE);
 
-                    // Launch Time Picker Dialog
                     TimePickerDialog tpd = new TimePickerDialog(CreateGroupActivity.this,
                             new TimePickerDialog.OnTimeSetListener() {
-
                                 @Override
-                                public void onTimeSet(TimePicker view, int hourOfDay,
-                                                      int minute) {
-                                    // Display Selected time in textbox
-                                    txtStartTime.setText(hourOfDay + ":" + minute);
+                                public void onTimeSet(TimePicker view, int hourOfDay,int minute) {
+                                    mStartHour = hourOfDay;
+                                    mStartMinute = minute;
+                                    txtStartTime.setText(Utils.formatDate(mStartHour,mStartMinute));
                                 }
                             }, mStartHour, mStartMinute, false);
                     tpd.show();
@@ -94,20 +88,16 @@ public class CreateGroupActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                    TextKeyListener.clear((txtEndTime).getText());
-                    final Calendar c = Calendar.getInstance();
-                    mEndHour = c.get(Calendar.HOUR_OF_DAY);
-                    mEndMinute = c.get(Calendar.MINUTE);
 
-                    // Launch Time Picker Dialog
                     TimePickerDialog tpd = new TimePickerDialog(CreateGroupActivity.this,
                             new TimePickerDialog.OnTimeSetListener() {
 
                                 @Override
                                 public void onTimeSet(TimePicker view, int hourOfDay,
                                                       int minute) {
-                                    // Display Selected time in textbox
-                                    txtEndTime.setText(hourOfDay + ":" + minute);
+                                    mEndHour = hourOfDay;
+                                    mEndMinute = minute;
+                                    txtEndTime.setText(Utils.formatDate(mEndHour,mEndMinute));
                                 }
                             }, mEndHour, mEndMinute, false);
                     tpd.show();

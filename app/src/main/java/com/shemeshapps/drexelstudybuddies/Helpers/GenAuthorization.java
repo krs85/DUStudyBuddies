@@ -16,9 +16,9 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * Created by tomershemesh on 5/30/14.
  */
-public class genAuthToken {
+public class GenAuthorization {
 
-    public static String getTokenHeader(String URL)
+    public static String GetTokenHeader(String URL)
     {
         SharedPreferences pref = RequestUtil.context.getSharedPreferences("login_data", Context.MODE_PRIVATE);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");

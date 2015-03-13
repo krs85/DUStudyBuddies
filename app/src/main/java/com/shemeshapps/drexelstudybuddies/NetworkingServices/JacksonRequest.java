@@ -6,7 +6,7 @@ import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
-import com.shemeshapps.drexelstudybuddies.Helpers.genAuthToken;
+import com.shemeshapps.drexelstudybuddies.Helpers.GenAuthorization;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +59,7 @@ public class JacksonRequest<T> extends JsonRequest<T> {
         }
         if(putAuthKey)
         {
-            params.put("Authorization", genAuthToken.getTokenHeader(url));
+            params.put("Authorization", GenAuthorization.GetTokenHeader(url));
         }
         return params;
     }

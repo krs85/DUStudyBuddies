@@ -2,6 +2,8 @@ package com.shemeshapps.drexelstudybuddies.NetworkingServices;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -11,11 +13,24 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.parse.FindCallback;
+import com.parse.FunctionCallback;
+import com.parse.GetCallback;
+import com.parse.ParseCloud;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.SaveCallback;
+import com.shemeshapps.drexelstudybuddies.Activities.LoginActivity;
+import com.shemeshapps.drexelstudybuddies.Helpers.GenAuthorization;
+import com.shemeshapps.drexelstudybuddies.Models.DrexelClass;
+import com.shemeshapps.drexelstudybuddies.Models.Group;
 import com.shemeshapps.drexelstudybuddies.Models.LoginRequest;
 import com.shemeshapps.drexelstudybuddies.Models.LoginResponse;
 
 import java.util.Arrays;
-
+import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -60,16 +75,65 @@ public class RequestUtil {
         RequestUtil.queue.add(new JacksonRequest<>(Request.Method.PUT,url,r, LoginResponse.class,listener,errorListener,false));
     }
 
-    public static void getCurrentClasses(Response.Listener listener)
+    public static void getUsersCurrentClasses(Response.Listener listener)
     {
-        //String url = "https://d1m.drexel.edu/API/v2.0/Student/CourseCalendars/";
-        String url = "https://d1m.drexel.edu/API/v2.0/ViewModel/MeDelta";
+        String url = "https://d1m.drexel.edu/API/v2.0/Student/CourseSections";
+        RequestUtil.queue.add(new JacksonRequest<>(Request.Method.GET,url,null, DrexelClass[].class,listener,errorListener,true));
+    }
+
+    public static void getRoles(Response.Listener listener)
+    {
+        String url = "https://d1m.drexel.edu/API/v2.0/User/Roles";
         RequestUtil.queue.add(new JacksonRequest<>(Request.Method.GET,url,null, Object.class,listener,errorListener,true));
     }
 
-    public static void logout()
+    public static void postStudyGroup(Group studyGroup)
+    {
+        String url = "https://d1m.drexel.edu/API/v2.0/User/Roles";
+        ParseObject study = new ParseObject("StudyGroup");
+        study.put("Class", "cs283");
+
+        study.put("Authorization", GenAuthorization.GetTokenHeader(url));
+
+        study.saveInBackground();
+    }
+
+
+
+            /*RequestUtil.getStudyGroups("",new FunctionCallback<List<ParseObject>>() {
+            public void done(List<ParseObject> groups, ParseException e) {
+                if (e == null) {
+
+                }
+            }
+        });*/
+
+    //takes a comma delimeted list ex cs275,cs283,cs260 or leave empty for all groups
+    public static void getStudyGroups(String classNames,FunctionCallback callback)
+    {
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("classes", classNames);
+        params.put("Authorization", GenAuthorization.GetTokenHeader("https://d1m.drexel.edu/API/v2.0/User/Roles"));
+        ParseCloud.callFunctionInBackground("QueryGroupsByClass", params, callback);
+
+    }
+
+
+    public static void getMyStudyGroups()
     {
 
+    }
+
+
+    public static void logout()
+    {
+        SharedPreferences pref = context.getSharedPreferences("login_data", Context.MODE_PRIVATE);
+        pref.edit().clear().commit();
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
 }
