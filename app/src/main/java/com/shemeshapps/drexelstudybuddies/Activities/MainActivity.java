@@ -3,6 +3,7 @@ package com.shemeshapps.drexelstudybuddies.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -26,6 +27,9 @@ import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
+    ExpandableListView suggestedGroupsList;
+    SwipeRefreshLayout refreshLayout;
+    ListStudyGroupAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,25 +54,19 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        final ExpandableListView suggestedGroups = (ExpandableListView)findViewById(R.id.suggestedStudyGroupList);
-
-        SharedPreferences pref = getSharedPreferences("login_data", Context.MODE_PRIVATE);
-
-        RequestUtil.getStudyGroups(pref.getString("user_classes",""),new FunctionCallback<List<ParseObject>>() {
-            public void done(List<ParseObject> groups, ParseException e) {
-                if (e == null) {
-                    ListStudyGroupAdapter adapter = new ListStudyGroupAdapter(getApplicationContext(),groups);
-                    suggestedGroups.setAdapter(adapter);
-                    int count = adapter.getGroupCount();
-                    for (int position = 1; position <= count; position++)
-                        suggestedGroups.expandGroup(position - 1);
-                }
+        final SharedPreferences pref = getSharedPreferences("login_data", Context.MODE_PRIVATE);
+        refreshLayout = (SwipeRefreshLayout)findViewById(R.id.suggestedStudyListRefresh);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                adapter.loadGroupFromBackend(pref.getString("user_classes",""),false);
             }
         });
+        suggestedGroupsList = (ExpandableListView)findViewById(R.id.suggestedStudyGroupList);
+        adapter = new ListStudyGroupAdapter(getApplicationContext(),new ArrayList<ParseObject>(),refreshLayout,pref.getString("user_classes",""));
+        suggestedGroupsList.setAdapter(adapter);
 
     }
-
-
 
 
 

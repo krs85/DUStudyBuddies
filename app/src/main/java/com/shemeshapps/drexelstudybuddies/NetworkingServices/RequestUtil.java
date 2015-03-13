@@ -96,15 +96,6 @@ public class RequestUtil {
     }
 
 
-
-            /*RequestUtil.getStudyGroups("",new FunctionCallback<List<ParseObject>>() {
-            public void done(List<ParseObject> groups, ParseException e) {
-                if (e == null) {
-
-                }
-            }
-        });*/
-
     //takes a comma delimeted list ex cs275,cs283,cs260 or leave empty for all groups
     public static void getStudyGroups(String classNames,FunctionCallback callback)
     {
@@ -112,16 +103,8 @@ public class RequestUtil {
         params.put("classes", classNames);
         params.put("Authorization", GenAuthorization.GetTokenHeader());
         ParseCloud.callFunctionInBackground("QueryGroupsByClass", params, callback);
-
     }
 
-
-
-    public static void getMe(Response.Listener listener)
-    {
-        String url = "https://d1m.drexel.edu/API/v2.0/DragonCard/Accounts";
-        RequestUtil.queue.add(new JacksonRequest<>(Request.Method.GET,url,null, Object.class,listener,errorListener,true));
-    }
 
     public static void getMyStudyGroups()
     {

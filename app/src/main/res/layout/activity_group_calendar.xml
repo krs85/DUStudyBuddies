@@ -1,19 +1,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:focusable="true" android:focusableInTouchMode="true"
     android:layout_height="match_parent">
     <SearchView
         android:layout_width="fill_parent"
-        android:queryHint="Browse Group By Class Name"
+        android:queryHint="Search Groups e.g: cs101,cs102"
         android:iconifiedByDefault="false"
+        android:id="@+id/browseGroupSearchBox"
         android:layout_height="wrap_content"/>
 
-
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/browseGroupsRefresher"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <ExpandableListView
         android:layout_width="fill_parent"
         android:id="@+id/list_study_groups"
         android:layout_height="fill_parent"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
     </LinearLayout>
 
 

@@ -2,6 +2,7 @@ package com.shemeshapps.drexelstudybuddies.Helpers;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,10 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import com.parse.FunctionCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.shemeshapps.drexelstudybuddies.NetworkingServices.RequestUtil;
 import com.shemeshapps.drexelstudybuddies.R;
 
 import org.w3c.dom.Text;
@@ -26,12 +30,30 @@ public class ListStudyGroupAdapter extends BaseExpandableListAdapter {
     List<Date> groupDates = new ArrayList<>();
     Context context;
     LayoutInflater mInflater;
+    SwipeRefreshLayout refreshLayout;
 
-    public ListStudyGroupAdapter(Context c, List<ParseObject> studyGroups)
+    public ListStudyGroupAdapter(Context c, List<ParseObject> studyGroups, final SwipeRefreshLayout refreshLayout, String initialQuery)
     {
         Utils.sortGroups(studyGroups,sortedStudyGroups,groupDates);
         this.context = c;
         mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        this.refreshLayout = refreshLayout;
+
+        refreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        if(initialQuery != null)
+        {
+            refreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(true);
+                }
+            });
+            loadGroupFromBackend(initialQuery,false);
+        }
+
     }
 
 
@@ -104,5 +126,35 @@ public class ListStudyGroupAdapter extends BaseExpandableListAdapter {
     @Override
     public Object getChild(int groupPosition, int childPosititon) {
         return sortedStudyGroups.get(groupPosition).get(childPosititon);
+    }
+
+    public void loadGroupFromBackend(String query,boolean showRefresh)
+    {
+        if(showRefresh)
+        {
+            refreshLayout.setRefreshing(true);
+        }
+
+        RequestUtil.getStudyGroups(query, new FunctionCallback<List<ParseObject>>() {
+            public void done(List<ParseObject> groups, ParseException e) {
+                if (e == null) {
+                    resetList(groups);
+                    int count = getGroupCount();
+                    for (int position = 1; position <= count; position++)
+                        ((ExpandableListView)refreshLayout.getChildAt(0)).expandGroup(position - 1);
+
+                    refreshLayout.setRefreshing(false);
+
+                }
+            }
+        });
+    }
+
+    public void resetList(List<ParseObject> newGroups)
+    {
+        sortedStudyGroups.clear();
+        groupDates.clear();
+        Utils.sortGroups(newGroups,sortedStudyGroups,groupDates);
+        notifyDataSetChanged();
     }
 }

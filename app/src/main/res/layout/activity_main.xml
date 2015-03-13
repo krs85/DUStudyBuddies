@@ -33,9 +33,14 @@
         android:layout_gravity="center_horizontal"
         android:text="Suggested Study Groups:"/>
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/suggestedStudyListRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <ExpandableListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/suggestedStudyGroupList"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

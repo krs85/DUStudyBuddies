@@ -12,6 +12,6 @@ public class Group {
     public Date endTime;
     public String location;
     public String course;
-
+    public String id;
     public Group(){}
 }
