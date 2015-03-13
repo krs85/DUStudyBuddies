@@ -1,13 +1,11 @@
 package com.shemeshapps.drexelstudybuddies.Activities;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.text.method.TextKeyListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -63,7 +61,7 @@ public class CreateGroupActivity extends Activity {
                                     mYear = year;
                                     mMonth = monthOfYear;
                                     mDay = dayOfMonth;
-                                    txtDate.setText((monthOfYear + 1) + "/" + dayOfMonth+ "/" + year);
+                                    txtDate.setText(Utils.formatDate(monthOfYear ,dayOfMonth,year));
                                     txtDate.setError(null);
                                 }
                             }, mYear, mMonth, mDay);
@@ -84,7 +82,7 @@ public class CreateGroupActivity extends Activity {
                                 public void onTimeSet(TimePicker view, int hourOfDay,int minute) {
                                     mStartHour = hourOfDay;
                                     mStartMinute = minute;
-                                    txtStartTime.setText(Utils.formatDate(mStartHour,mStartMinute));
+                                    txtStartTime.setText(Utils.formatTime(mStartHour, mStartMinute));
                                     txtStartTime.setError(null);
                                 }
                             }, mStartHour, mStartMinute, false);
@@ -107,7 +105,7 @@ public class CreateGroupActivity extends Activity {
                                                       int minute) {
                                     mEndHour = hourOfDay;
                                     mEndMinute = minute;
-                                    txtEndTime.setText(Utils.formatDate(mEndHour,mEndMinute));
+                                    txtEndTime.setText(Utils.formatTime(mEndHour, mEndMinute));
                                     txtEndTime.setError(null);
                                 }
                             }, mEndHour, mEndMinute, false);

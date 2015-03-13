@@ -81,15 +81,8 @@ public class RequestUtil {
         RequestUtil.queue.add(new JacksonRequest<>(Request.Method.GET,url,null, DrexelClass[].class,listener,errorListener,true));
     }
 
-    public static void getRoles(Response.Listener listener)
-    {
-        String url = "https://d1m.drexel.edu/API/v2.0/User/Roles";
-        RequestUtil.queue.add(new JacksonRequest<>(Request.Method.GET,url,null, Object.class,listener,errorListener,true));
-    }
-
     public static void postStudyGroup(Group g)
     {
-        String url = "https://d1m.drexel.edu/API/v2.0/User/Roles";
         ParseObject study = new ParseObject("StudyGroup");
         study.put("Class", g.course);
         study.put("Name",g.groupName);
@@ -97,7 +90,7 @@ public class RequestUtil {
         study.put("Description",g.description);
         study.put("StartTime",g.startTime);
         study.put("EndTime",g.endTime);
-        study.put("Authorization", GenAuthorization.GetTokenHeader(url));
+        study.put("Authorization", GenAuthorization.GetTokenHeader());
 
         study.saveInBackground();
     }
@@ -117,11 +110,18 @@ public class RequestUtil {
     {
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("classes", classNames);
-        params.put("Authorization", GenAuthorization.GetTokenHeader("https://d1m.drexel.edu/API/v2.0/User/Roles"));
+        params.put("Authorization", GenAuthorization.GetTokenHeader());
         ParseCloud.callFunctionInBackground("QueryGroupsByClass", params, callback);
 
     }
 
+
+
+    public static void getMe(Response.Listener listener)
+    {
+        String url = "https://d1m.drexel.edu/API/v2.0/DragonCard/Accounts";
+        RequestUtil.queue.add(new JacksonRequest<>(Request.Method.GET,url,null, Object.class,listener,errorListener,true));
+    }
 
     public static void getMyStudyGroups()
     {

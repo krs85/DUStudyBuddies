@@ -18,6 +18,10 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class GenAuthorization {
 
+    public static String GetTokenHeader()
+    {
+        return GenAuthorization.GetTokenHeader("https://d1m.drexel.edu/API/v2.0/User/Roles");
+    }
     public static String GetTokenHeader(String URL)
     {
         SharedPreferences pref = RequestUtil.context.getSharedPreferences("login_data", Context.MODE_PRIVATE);
