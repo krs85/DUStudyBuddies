@@ -1,88 +1,152 @@
 package com.shemeshapps.drexelstudybuddies.Activities;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.Fragment;
+import android.content.res.Configuration;
+import android.content.res.TypedArray;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ExpandableListView;
-import android.widget.Toast;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.parse.FunctionCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.shemeshapps.drexelstudybuddies.Helpers.ListStudyGroupAdapter;
-import com.shemeshapps.drexelstudybuddies.Models.Group;
+import com.shemeshapps.drexelstudybuddies.Helpers.DrawerAdapter;
+import com.shemeshapps.drexelstudybuddies.Models.DrawerItem;
 import com.shemeshapps.drexelstudybuddies.NetworkingServices.RequestUtil;
 import com.shemeshapps.drexelstudybuddies.R;
 
 import java.util.ArrayList;
-import java.util.List;
-
 
 public class MainActivity extends ActionBarActivity {
-    ExpandableListView suggestedGroupsList;
-    SwipeRefreshLayout refreshLayout;
-    ListStudyGroupAdapter adapter;
 
+    private ListView drawerList;
+    private DrawerAdapter adapter;
+    private ArrayList<DrawerItem> drawerItems;
+    private DrawerLayout drawerLayout;
+    private android.support.v7.app.ActionBarDrawerToggle drawerToggle;
+    ArrayList<Fragment> appFragments;
+    private Fragment currentFragment;
+    int currentFragIndex = 0;
+
+    public enum fragments{
+        SUGGESTED,BROWSE,MINE,ATTENDING,CREATE,LOGOUT
+    }
+
+    //setup drawer and action bar
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Button crt_grp = (Button) findViewById(R.id.create_grp);
+        setupActionBar();
+        setupDrawer();
+        if (savedInstanceState != null) {
+            currentFragIndex = savedInstanceState.getInt("currentPage");
+        }
+        loadScreen(currentFragIndex);
+    }
 
-        crt_grp.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,CreateGroupActivity.class);
-                startActivity(intent);
-            }
-        });
+    //setup action bar for drawer and such
+    private void setupActionBar()
+    {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
 
-        final Button grp_cal = (Button) findViewById(R.id.avail_grp);
+    //setup drawer items and allow them to change the fragment on press
+    private void setupDrawer()
+    {
+        appFragments = new ArrayList<>();
+        appFragments.add(new SuggestedGroups());
+        appFragments.add(new GroupCalendar());
+        appFragments.add(new GroupCalendar());
+        appFragments.add(new GroupCalendar());
+        appFragments.add(new CreateGroupActivity());
 
-        grp_cal.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,GroupCalendar.class);
-                startActivity(intent);
-            }
-        });
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        drawerList = (ListView)findViewById(R.id.drawer_list_view);
+        drawerItems = new ArrayList<>();
+        String[] drawerTitles = getResources().getStringArray(R.array.nav_drawer_items);
+        TypedArray drawerIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
 
-        final SharedPreferences pref = getSharedPreferences("login_data", Context.MODE_PRIVATE);
-        refreshLayout = (SwipeRefreshLayout)findViewById(R.id.suggestedStudyListRefresh);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        for(int i=0; i<drawerTitles.length;i++)
+        {
+            drawerItems.add(new DrawerItem(drawerTitles[i],drawerIcons.getResourceId(i,-1)));
+        }
+        drawerIcons.recycle();
+        adapter = new DrawerAdapter(this,drawerItems);
+        drawerList.setAdapter(adapter);
+        drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onRefresh() {
-                adapter.loadGroupFromBackend(pref.getString("user_classes",""),false);
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                loadScreen(i);
             }
         });
-        suggestedGroupsList = (ExpandableListView)findViewById(R.id.suggestedStudyGroupList);
-        adapter = new ListStudyGroupAdapter(getApplicationContext(),new ArrayList<ParseObject>(),refreshLayout,pref.getString("user_classes",""));
-        suggestedGroupsList.setAdapter(adapter);
 
+        drawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this,drawerLayout, R.string.app_name, R.string.app_name);
+        drawerLayout.setDrawerListener(drawerToggle);
+    }
+
+    //load a screen based on menu position
+    public void loadScreen(fragments f){loadScreen(f.ordinal());}
+    public void loadScreen(int position)
+    {
+        if(position == fragments.LOGOUT.ordinal())
+        {
+            RequestUtil.logout();
+        }
+        else
+        {
+            currentFragment = appFragments.get(position);
+            currentFragIndex = position;
+            drawerList.setItemChecked(position,true);
+            drawerLayout.closeDrawer(Gravity.LEFT);
+            getSupportActionBar().setTitle(drawerItems.get(position).title);
+            getFragmentManager().beginTransaction().replace(R.id.content_frame,appFragments.get(position)).commitAllowingStateLoss();
+            invalidateOptionsMenu();
+        }
     }
 
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putInt("currentPage", currentFragIndex);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    //when back is pressed check with lower fragments to see if we should close the app or let them handle it like in browse
+    @Override
+    public void onBackPressed()
+    {
+            super.onBackPressed();
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            RequestUtil.logout();
+        if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

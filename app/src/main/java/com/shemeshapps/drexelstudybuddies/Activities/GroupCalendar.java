@@ -1,10 +1,14 @@
 package com.shemeshapps.drexelstudybuddies.Activities;
 
+import android.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.SearchView;
 
@@ -14,15 +18,18 @@ import com.shemeshapps.drexelstudybuddies.R;
 
 import java.util.ArrayList;
 
-public class GroupCalendar extends ActionBarActivity {
+public class GroupCalendar extends Fragment {
 
+    View parentView;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        parentView = inflater.inflate(R.layout.activity_group_calendar, container, false);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_calendar);
-        final SearchView searchBox = (SearchView)findViewById(R.id.browseGroupSearchBox);
-        SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout)findViewById(R.id.browseGroupsRefresher);
-        final ListStudyGroupAdapter adapter = new ListStudyGroupAdapter(getApplicationContext(),new ArrayList<ParseObject>(),refreshLayout,"");
+
+        final SearchView searchBox = (SearchView)parentView.findViewById(R.id.browseGroupSearchBox);
+        SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout)parentView.findViewById(R.id.browseGroupsRefresher);
+        final ListStudyGroupAdapter adapter = new ListStudyGroupAdapter(getActivity(),new ArrayList<ParseObject>(),refreshLayout,"");
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -30,7 +37,7 @@ public class GroupCalendar extends ActionBarActivity {
                 adapter.loadGroupFromBackend(searchBox.getQuery().toString(),false);
             }
         });
-        ExpandableListView suggestedGroupsList = (ExpandableListView)findViewById(R.id.list_study_groups);
+        ExpandableListView suggestedGroupsList = (ExpandableListView)parentView.findViewById(R.id.list_study_groups);
         suggestedGroupsList.setAdapter(adapter);
 
         searchBox.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -49,5 +56,6 @@ public class GroupCalendar extends ActionBarActivity {
                 return false;
             }
         });
+        return parentView;
     }
 }

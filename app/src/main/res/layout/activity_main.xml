@@ -1,46 +1,22 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_height="wrap_content"
-        android:text="Browse Study Groups"
-        android:id="@+id/avail_grp"
-         />
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_height="wrap_content"
-        android:text="Create Study Group"
-        android:id="@+id/create_grp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        android:layout_marginTop="5dp"
-        android:layout_gravity="center_horizontal"
-        android:text="Suggested Study Groups:"/>
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/suggestedStudyListRefresh"
+    <FrameLayout
+        android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <ExpandableListView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/suggestedStudyGroupList"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent" />
 
-</LinearLayout>
+    <!-- The navigation drawer -->
+    <ListView
+        android:id="@+id/drawer_list_view"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:dividerHeight="1dp"
+        android:paddingTop="0dp"
+        android:background="@android:color/white"/>
+</android.support.v4.widget.DrawerLayout>

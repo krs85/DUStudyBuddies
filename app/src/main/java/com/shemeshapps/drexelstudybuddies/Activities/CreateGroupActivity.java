@@ -4,10 +4,13 @@ import java.util.Calendar;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -19,24 +22,25 @@ import com.shemeshapps.drexelstudybuddies.Models.Group;
 import com.shemeshapps.drexelstudybuddies.NetworkingServices.RequestUtil;
 import com.shemeshapps.drexelstudybuddies.R;
 
-public class CreateGroupActivity extends Activity {
+public class CreateGroupActivity extends Fragment {
 
     // Widget GUI
     EditText txtDate, txtStartTime, txtEndTime, txtGroupName, txtLocation, txtCourse, txtDescr;
     private int mYear, mMonth, mDay, mStartHour, mStartMinute, mEndHour,mEndMinute;
+    View parentView;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_group);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        txtDate = (EditText) findViewById(R.id.date_txt);
-        txtStartTime = (EditText) findViewById(R.id.start_time_txt);
-        txtEndTime = (EditText) findViewById(R.id.end_time_txt);
-        txtGroupName = (EditText) findViewById(R.id.grp_name);
-        txtCourse = (EditText)findViewById(R.id.course_txt);
-        txtLocation = (EditText)findViewById(R.id.location_txt);
-        txtDescr = (EditText)findViewById(R.id.desc_txt);
+        parentView = inflater.inflate(R.layout.activity_create_group, container, false);
+
+        txtDate = (EditText)parentView.findViewById(R.id.date_txt);
+        txtStartTime = (EditText)parentView.findViewById(R.id.start_time_txt);
+        txtEndTime = (EditText) parentView.findViewById(R.id.end_time_txt);
+        txtGroupName = (EditText) parentView.findViewById(R.id.grp_name);
+        txtCourse = (EditText)parentView.findViewById(R.id.course_txt);
+        txtLocation = (EditText)parentView.findViewById(R.id.location_txt);
+        txtDescr = (EditText)parentView.findViewById(R.id.desc_txt);
 
         final Calendar c = Calendar.getInstance();
         mStartHour = c.get(Calendar.HOUR_OF_DAY);
@@ -51,7 +55,7 @@ public class CreateGroupActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                    DatePickerDialog dpd = new DatePickerDialog(CreateGroupActivity.this,
+                    DatePickerDialog dpd = new DatePickerDialog(getActivity(),
                             new DatePickerDialog.OnDateSetListener() {
 
                                 @Override
@@ -76,7 +80,7 @@ public class CreateGroupActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                    TimePickerDialog tpd = new TimePickerDialog(CreateGroupActivity.this,
+                    TimePickerDialog tpd = new TimePickerDialog(getActivity(),
                             new TimePickerDialog.OnTimeSetListener() {
                                 @Override
                                 public void onTimeSet(TimePicker view, int hourOfDay,int minute) {
@@ -98,7 +102,7 @@ public class CreateGroupActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                    TimePickerDialog tpd = new TimePickerDialog(CreateGroupActivity.this,
+                    TimePickerDialog tpd = new TimePickerDialog(getActivity(),
                             new TimePickerDialog.OnTimeSetListener() {
 
                                 @Override
@@ -116,18 +120,19 @@ public class CreateGroupActivity extends Activity {
 
         });
 
-        Button create = (Button)findViewById(R.id.submit_grp_btn);
+        Button create = (Button)parentView.findViewById(R.id.submit_grp_btn);
         create.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 createGroup();
             }
         });
+        return parentView;
     }
 
     private void createGroup()
     {
-        LinearLayout root = (LinearLayout)findViewById(R.id.createGroupRoot);
+        LinearLayout root = (LinearLayout)parentView.findViewById(R.id.createGroupRoot);
         int childcount = root.getChildCount();
         boolean missingField = false;
         for (int i=0; i < childcount; i++){
@@ -180,7 +185,7 @@ public class CreateGroupActivity extends Activity {
             g.endTime = endCal.getTime();
 
             RequestUtil.postStudyGroup(g);
-            finish();
+            ((MainActivity)getActivity()).loadScreen(MainActivity.fragments.MINE);
         }
     }
 }
