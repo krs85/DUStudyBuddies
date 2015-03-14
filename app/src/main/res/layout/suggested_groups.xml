@@ -10,7 +10,7 @@
         tools:context=".MainActivity">
 
 
-        <TextView
+        <!--<TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -18,7 +18,7 @@
             android:text="Suggested Study Groups:"
             android:textColor="@android:color/black"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold" />-->
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/suggestedStudyListRefresh"

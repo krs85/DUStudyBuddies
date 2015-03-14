@@ -66,8 +66,8 @@ public class MainActivity extends ActionBarActivity {
         appFragments = new ArrayList<>();
         appFragments.add(new SuggestedGroups());
         appFragments.add(new GroupCalendar());
-        appFragments.add(new GroupCalendar());
-        appFragments.add(new GroupCalendar());
+        appFragments.add(new MyStudyGroups());
+        appFragments.add(new GroupsAttending());
         appFragments.add(new CreateGroupActivity());
 
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);

@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.SearchView;
 
@@ -26,9 +27,15 @@ public class GroupCalendar extends Fragment {
 
         parentView = inflater.inflate(R.layout.activity_group_calendar, container, false);
         super.onCreate(savedInstanceState);
+        final Button crt_grp = (Button)parentView.findViewById(R.id.create_grp);
 
+        crt_grp.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                ((MainActivity)getActivity()).loadScreen(MainActivity.fragments.CREATE);
+            }
+        });
         final SearchView searchBox = (SearchView)parentView.findViewById(R.id.browseGroupSearchBox);
-        SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout)parentView.findViewById(R.id.browseGroupsRefresher);
+        SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout)parentView.findViewById(R.id.suggestedStudyListRefresh);
         final ListStudyGroupAdapter adapter = new ListStudyGroupAdapter(getActivity(),new ArrayList<ParseObject>(),refreshLayout,"");
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -37,7 +44,7 @@ public class GroupCalendar extends Fragment {
                 adapter.loadGroupFromBackend(searchBox.getQuery().toString(),false);
             }
         });
-        ExpandableListView suggestedGroupsList = (ExpandableListView)parentView.findViewById(R.id.list_study_groups);
+        ExpandableListView suggestedGroupsList = (ExpandableListView)parentView.findViewById(R.id.suggestedStudyGroupList);
         suggestedGroupsList.setAdapter(adapter);
 
         searchBox.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

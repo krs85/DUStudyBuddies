@@ -106,9 +106,18 @@ public class RequestUtil {
     }
 
 
-    public static void getMyStudyGroups()
+    public static void getMyStudyGroups(FunctionCallback callback)
     {
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("Authorization", GenAuthorization.GetTokenHeader());
+        ParseCloud.callFunctionInBackground("MyStudyGroups", params, callback);
+    }
 
+    public static void getAttendingStudyGroups(FunctionCallback callback)
+    {
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("Authorization", GenAuthorization.GetTokenHeader());
+        ParseCloud.callFunctionInBackground("AttendingStudyGroups", params, callback);
     }
 
 

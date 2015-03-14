@@ -130,12 +130,7 @@ public class ListStudyGroupAdapter extends BaseExpandableListAdapter {
 
     public void loadGroupFromBackend(String query,boolean showRefresh)
     {
-        if(showRefresh)
-        {
-            refreshLayout.setRefreshing(true);
-        }
-
-        RequestUtil.getStudyGroups(query, new FunctionCallback<List<ParseObject>>() {
+        FunctionCallback callback = new FunctionCallback<List<ParseObject>>() {
             public void done(List<ParseObject> groups, ParseException e) {
                 if (e == null) {
                     resetList(groups);
@@ -147,7 +142,25 @@ public class ListStudyGroupAdapter extends BaseExpandableListAdapter {
 
                 }
             }
-        });
+        };
+
+        if(showRefresh)
+        {
+            refreshLayout.setRefreshing(true);
+        }
+        if(query.equals("MyStudyGroups"))
+        {
+            RequestUtil.getMyStudyGroups(callback);
+        }
+        else if(query.equals("AttendingStudyGroups"))
+        {
+            RequestUtil.getAttendingStudyGroups(callback);
+        }
+        else
+        {
+            RequestUtil.getStudyGroups(query, callback);
+        }
+
     }
 
     public void resetList(List<ParseObject> newGroups)
