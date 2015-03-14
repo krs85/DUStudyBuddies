@@ -2,6 +2,7 @@ package com.shemeshapps.drexelstudybuddies.Helpers;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.parse.FunctionCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.shemeshapps.drexelstudybuddies.Activities.ViewGroupActivity;
 import com.shemeshapps.drexelstudybuddies.NetworkingServices.RequestUtil;
 import com.shemeshapps.drexelstudybuddies.R;
 
@@ -31,13 +33,17 @@ public class ListStudyGroupAdapter extends BaseExpandableListAdapter {
     Context context;
     LayoutInflater mInflater;
     SwipeRefreshLayout refreshLayout;
+    ExpandableListView expandableListView;
+    View headerView;
 
-    public ListStudyGroupAdapter(Context c, List<ParseObject> studyGroups, final SwipeRefreshLayout refreshLayout, String initialQuery)
+    public ListStudyGroupAdapter(Context c, List<ParseObject> studyGroups, final SwipeRefreshLayout refreshLayout, final ExpandableListView expandableListView, String initialQuery)
     {
         Utils.sortGroups(studyGroups,sortedStudyGroups,groupDates);
         this.context = c;
         mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         this.refreshLayout = refreshLayout;
+        this.expandableListView = expandableListView;
+        headerView = mInflater.inflate(R.layout.no_result_header,null);
 
         refreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
@@ -53,6 +59,16 @@ public class ListStudyGroupAdapter extends BaseExpandableListAdapter {
             });
             loadGroupFromBackend(initialQuery,false);
         }
+
+
+        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                Intent i = new Intent(context, ViewGroupActivity.class);
+                context.startActivity(i);
+                return false;
+            }
+        });
 
     }
 
@@ -134,9 +150,18 @@ public class ListStudyGroupAdapter extends BaseExpandableListAdapter {
             public void done(List<ParseObject> groups, ParseException e) {
                 if (e == null) {
                     resetList(groups);
-                    int count = getGroupCount();
-                    for (int position = 1; position <= count; position++)
-                        ((ExpandableListView)refreshLayout.getChildAt(0)).expandGroup(position - 1);
+                    if(groups.size()>0)
+                    {
+                        expandableListView.removeHeaderView(headerView);
+                        int count = getGroupCount();
+                        for (int position = 1; position <= count; position++)
+                            expandableListView.expandGroup(position - 1);
+                    }
+                    else
+                    {
+                        expandableListView.addHeaderView(headerView,null,false);
+
+                    }
 
                     refreshLayout.setRefreshing(false);
 

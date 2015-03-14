@@ -1,4 +1,4 @@
-package com.shemeshapps.drexelstudybuddies.Activities;
+package com.shemeshapps.drexelstudybuddies.Fragments;
 
 import java.util.Calendar;
 
@@ -15,17 +15,24 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TimePicker;
 
+import com.parse.ParseException;
+import com.parse.SaveCallback;
+import com.shemeshapps.drexelstudybuddies.Activities.MainActivity;
 import com.shemeshapps.drexelstudybuddies.Helpers.Utils;
 import com.shemeshapps.drexelstudybuddies.Models.Group;
 import com.shemeshapps.drexelstudybuddies.NetworkingServices.RequestUtil;
 import com.shemeshapps.drexelstudybuddies.R;
 
-public class CreateGroupActivity extends Fragment {
+public class CreateGroup extends Fragment {
 
     // Widget GUI
     EditText txtDate, txtStartTime, txtEndTime, txtGroupName, txtLocation, txtCourse, txtDescr;
+    ProgressBar loading;
+    Button create;
+    LinearLayout root;
     private int mYear, mMonth, mDay, mStartHour, mStartMinute, mEndHour,mEndMinute;
     View parentView;
 
@@ -41,7 +48,9 @@ public class CreateGroupActivity extends Fragment {
         txtCourse = (EditText)parentView.findViewById(R.id.course_txt);
         txtLocation = (EditText)parentView.findViewById(R.id.location_txt);
         txtDescr = (EditText)parentView.findViewById(R.id.desc_txt);
-
+        loading = (ProgressBar)parentView.findViewById(R.id.create_group_loader);
+        create = (Button)parentView.findViewById(R.id.submit_grp_btn);
+        root = (LinearLayout)parentView.findViewById(R.id.createGroupRoot);
         final Calendar c = Calendar.getInstance();
         mStartHour = c.get(Calendar.HOUR_OF_DAY);
         mStartMinute = c.get(Calendar.MINUTE);
@@ -120,19 +129,19 @@ public class CreateGroupActivity extends Fragment {
 
         });
 
-        Button create = (Button)parentView.findViewById(R.id.submit_grp_btn);
+
         create.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 createGroup();
             }
         });
+
         return parentView;
     }
 
     private void createGroup()
     {
-        LinearLayout root = (LinearLayout)parentView.findViewById(R.id.createGroupRoot);
         int childcount = root.getChildCount();
         boolean missingField = false;
         for (int i=0; i < childcount; i++){
@@ -153,7 +162,8 @@ public class CreateGroupActivity extends Fragment {
 
         /*
         HERE TO CHECK FOR IF END TIME IS BEFORE START,
-        START TIME IS BEFORE RIGHT NOW,
+        START TIME IS NOT BEFORE RIGHT NOW,
+        STUDY TIME IS AT LEAST 30 MIN
         NOT MORE THAN 2 WEEKS AHEAD OF TIME
 
         if so do ex: txtEndTime.setError("Start time before end");
@@ -162,6 +172,8 @@ public class CreateGroupActivity extends Fragment {
 
         if(!missingField)
         {
+            create.setEnabled(false);
+            loading.setVisibility(View.VISIBLE);
             Group g= new Group();
             g.course = txtCourse.getText().toString();
             g.description = txtDescr.getText().toString();
@@ -184,8 +196,23 @@ public class CreateGroupActivity extends Fragment {
             endCal.set(Calendar.YEAR,mYear);
             g.endTime = endCal.getTime();
 
-            RequestUtil.postStudyGroup(g);
-            ((MainActivity)getActivity()).loadScreen(MainActivity.fragments.MINE);
+            RequestUtil.postStudyGroup(g,new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    ((MainActivity)getActivity()).loadScreen(MainActivity.fragments.MINE);
+                    create.setEnabled(true);
+                    loading.setVisibility(View.GONE);
+                    int childcount = root.getChildCount();
+                    for (int i=0; i < childcount; i++) {
+                        View v = root.getChildAt(i);
+                        if (v instanceof EditText) {
+                            ((EditText)v).setText("");
+                        }
+                    }
+
+                }
+            });
+
         }
     }
 }

@@ -1,28 +1,30 @@
-package com.shemeshapps.drexelstudybuddies.Activities;
+package com.shemeshapps.drexelstudybuddies.Fragments;
 
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 
 import com.parse.ParseObject;
+import com.shemeshapps.drexelstudybuddies.Activities.MainActivity;
 import com.shemeshapps.drexelstudybuddies.Helpers.ListStudyGroupAdapter;
+import com.shemeshapps.drexelstudybuddies.NetworkingServices.RequestUtil;
 import com.shemeshapps.drexelstudybuddies.R;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class GroupsAttending extends Fragment {
 
+public class SuggestedGroups extends Fragment {
     ExpandableListView suggestedGroupsList;
     SwipeRefreshLayout refreshLayout;
     ListStudyGroupAdapter adapter;
@@ -43,17 +45,17 @@ public class GroupsAttending extends Fragment {
 
 
 
+        final SharedPreferences pref = getActivity().getSharedPreferences("login_data", Context.MODE_PRIVATE);
         refreshLayout = (SwipeRefreshLayout)parentView.findViewById(R.id.suggestedStudyListRefresh);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                adapter.loadGroupFromBackend("AttendingStudyGroups",false);
+                adapter.loadGroupFromBackend(pref.getString("user_classes",""),false);
             }
         });
         suggestedGroupsList = (ExpandableListView)parentView.findViewById(R.id.suggestedStudyGroupList);
-        adapter = new ListStudyGroupAdapter(getActivity(),new ArrayList<ParseObject>(),refreshLayout,"AttendingStudyGroups");
+        adapter = new ListStudyGroupAdapter(getActivity(),new ArrayList<ParseObject>(),refreshLayout,suggestedGroupsList,pref.getString("user_classes",""));
         suggestedGroupsList.setAdapter(adapter);
         return parentView;
     }
-
 }

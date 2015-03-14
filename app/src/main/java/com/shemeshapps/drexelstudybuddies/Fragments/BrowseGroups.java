@@ -1,4 +1,4 @@
-package com.shemeshapps.drexelstudybuddies.Activities;
+package com.shemeshapps.drexelstudybuddies.Fragments;
 
 import android.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,12 +14,13 @@ import android.widget.ExpandableListView;
 import android.widget.SearchView;
 
 import com.parse.ParseObject;
+import com.shemeshapps.drexelstudybuddies.Activities.MainActivity;
 import com.shemeshapps.drexelstudybuddies.Helpers.ListStudyGroupAdapter;
 import com.shemeshapps.drexelstudybuddies.R;
 
 import java.util.ArrayList;
 
-public class GroupCalendar extends Fragment {
+public class BrowseGroups extends Fragment {
 
     View parentView;
     @Override
@@ -28,7 +29,7 @@ public class GroupCalendar extends Fragment {
         parentView = inflater.inflate(R.layout.activity_group_calendar, container, false);
         super.onCreate(savedInstanceState);
         final Button crt_grp = (Button)parentView.findViewById(R.id.create_grp);
-
+        ExpandableListView suggestedGroupsList = (ExpandableListView)parentView.findViewById(R.id.suggestedStudyGroupList);
         crt_grp.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 ((MainActivity)getActivity()).loadScreen(MainActivity.fragments.CREATE);
@@ -36,7 +37,7 @@ public class GroupCalendar extends Fragment {
         });
         final SearchView searchBox = (SearchView)parentView.findViewById(R.id.browseGroupSearchBox);
         SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout)parentView.findViewById(R.id.suggestedStudyListRefresh);
-        final ListStudyGroupAdapter adapter = new ListStudyGroupAdapter(getActivity(),new ArrayList<ParseObject>(),refreshLayout,"");
+        final ListStudyGroupAdapter adapter = new ListStudyGroupAdapter(getActivity(),new ArrayList<ParseObject>(),refreshLayout,suggestedGroupsList,"");
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -44,7 +45,7 @@ public class GroupCalendar extends Fragment {
                 adapter.loadGroupFromBackend(searchBox.getQuery().toString(),false);
             }
         });
-        ExpandableListView suggestedGroupsList = (ExpandableListView)parentView.findViewById(R.id.suggestedStudyGroupList);
+
         suggestedGroupsList.setAdapter(adapter);
 
         searchBox.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

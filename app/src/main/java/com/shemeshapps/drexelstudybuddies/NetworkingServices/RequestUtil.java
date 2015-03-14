@@ -81,9 +81,17 @@ public class RequestUtil {
         RequestUtil.queue.add(new JacksonRequest<>(Request.Method.GET,url,null, DrexelClass[].class,listener,errorListener,true));
     }
 
-    public static void postStudyGroup(Group g)
+    public static void postStudyGroup(Group g,SaveCallback callback)
     {
-        ParseObject study = new ParseObject("StudyGroup");
+        ParseObject study;
+        if(g.id==null)
+        {
+            study = new ParseObject("StudyGroup");
+        }
+        else
+        {
+            study = ParseObject.createWithoutData("StudyGroup", g.id);
+        }
         study.put("Class", g.course);
         study.put("Name",g.groupName);
         study.put("Location",g.location);
@@ -92,7 +100,7 @@ public class RequestUtil {
         study.put("EndTime",g.endTime);
         study.put("Authorization", GenAuthorization.GetTokenHeader());
 
-        study.saveInBackground();
+        study.saveInBackground(callback);
     }
 
 

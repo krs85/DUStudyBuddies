@@ -1,4 +1,4 @@
-package com.shemeshapps.drexelstudybuddies.Activities;
+package com.shemeshapps.drexelstudybuddies.Fragments;
 
 
 import android.content.Context;
@@ -14,6 +14,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.parse.ParseObject;
+import com.shemeshapps.drexelstudybuddies.Activities.MainActivity;
 import com.shemeshapps.drexelstudybuddies.Helpers.ListStudyGroupAdapter;
 import com.shemeshapps.drexelstudybuddies.R;
 
@@ -51,7 +52,7 @@ public class MyStudyGroups extends Fragment {
             }
         });
         suggestedGroupsList = (ExpandableListView)parentView.findViewById(R.id.suggestedStudyGroupList);
-        adapter = new ListStudyGroupAdapter(getActivity(),new ArrayList<ParseObject>(),refreshLayout,"MyStudyGroups");
+        adapter = new ListStudyGroupAdapter(getActivity(),new ArrayList<ParseObject>(),refreshLayout,suggestedGroupsList,"MyStudyGroups");
         suggestedGroupsList.setAdapter(adapter);
         return parentView;
     }
