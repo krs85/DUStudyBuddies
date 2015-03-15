@@ -13,55 +13,63 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:textColor="@android:color/black"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:id="@+id/txtClass" />
 
     <TextView android:text="Name: "
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:layout_marginBottom="10dp"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:id="@+id/txtName" />
 
     <TextView android:text="Location: "
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:textColor="@android:color/black"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:id="@+id/txtLocation" />
 
     <TextView android:text="Creator: "
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:textColor="@android:color/black"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:id="@+id/txtCreator" />
     <TextView android:text="Date: "
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:textColor="@android:color/black"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:id="@+id/txtDate" />
 
     <TextView android:text="Time: "
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:textColor="@android:color/black"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:id="@+id/txtTime" />
 
     <TextView android:text="Attending: "
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:textColor="@android:color/black"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:id="@+id/txtAttending" />
 
     <TextView android:text="Description: "
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:textColor="@android:color/black"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:id="@+id/txtDescription" />
 
     <Button
         android:layout_width="wrap_content"
