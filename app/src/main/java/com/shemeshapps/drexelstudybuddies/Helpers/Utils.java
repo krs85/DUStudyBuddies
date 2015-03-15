@@ -110,7 +110,8 @@ public class Utils {
         study.put("Description",g.description);
         study.put("StartTime",g.startTime);
         study.put("EndTime",g.endTime);
-        study.put("UsersAttending",g.attendingUsers);
+        if(g.attendingUsers!=null)
+            study.put("UsersAttending",g.attendingUsers);
         study.put("Authorization", GenAuthorization.GetTokenHeader());
 
         return study;
