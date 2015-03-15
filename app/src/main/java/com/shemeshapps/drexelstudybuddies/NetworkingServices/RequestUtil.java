@@ -23,6 +23,7 @@ import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 import com.shemeshapps.drexelstudybuddies.Activities.LoginActivity;
 import com.shemeshapps.drexelstudybuddies.Helpers.GenAuthorization;
+import com.shemeshapps.drexelstudybuddies.Helpers.Utils;
 import com.shemeshapps.drexelstudybuddies.Models.DrexelClass;
 import com.shemeshapps.drexelstudybuddies.Models.Group;
 import com.shemeshapps.drexelstudybuddies.Models.LoginRequest;
@@ -83,23 +84,7 @@ public class RequestUtil {
 
     public static void postStudyGroup(Group g,SaveCallback callback)
     {
-        ParseObject study;
-        if(g.id==null)
-        {
-            study = new ParseObject("StudyGroup");
-        }
-        else
-        {
-            study = ParseObject.createWithoutData("StudyGroup", g.id);
-        }
-        study.put("Class", g.course);
-        study.put("Name",g.groupName);
-        study.put("Location",g.location);
-        study.put("Description",g.description);
-        study.put("StartTime",g.startTime);
-        study.put("EndTime",g.endTime);
-        study.put("Authorization", GenAuthorization.GetTokenHeader());
-
+        ParseObject study = Utils.GroupToParseObject(g);
         study.saveInBackground(callback);
     }
 

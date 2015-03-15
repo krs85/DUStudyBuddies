@@ -65,6 +65,8 @@ public class ListStudyGroupAdapter extends BaseExpandableListAdapter {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 Intent i = new Intent(context, ViewGroupActivity.class);
+                ParseObject g = sortedStudyGroups.get(groupPosition).get(childPosition);
+                i.putExtra("group",Utils.ParseObjectToGroup(g));
                 context.startActivity(i);
                 return false;
             }
@@ -160,11 +162,8 @@ public class ListStudyGroupAdapter extends BaseExpandableListAdapter {
                     else
                     {
                         expandableListView.addHeaderView(headerView,null,false);
-
                     }
-
                     refreshLayout.setRefreshing(false);
-
                 }
             }
         };

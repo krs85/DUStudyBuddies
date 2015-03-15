@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.shemeshapps.drexelstudybuddies.Models.Group;
 import com.shemeshapps.drexelstudybuddies.R;
 
 public class ViewGroupActivity extends ActionBarActivity {
@@ -14,6 +15,11 @@ public class ViewGroupActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_group);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Group g = (Group) getIntent().getSerializableExtra("group");
+        /*
+           go to activity view group layout put ids in all the text boxes and set them to the information from the group above. dont worry about the button
+           feel free to use the Utils.formatTime and formatDate to make the dates into pretty strings. make sure to print out all attending users in the array
+         */
     }
 
     @Override

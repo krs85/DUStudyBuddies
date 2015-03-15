@@ -1,6 +1,10 @@
 package com.shemeshapps.drexelstudybuddies.Helpers;
 
 import com.parse.ParseObject;
+import com.shemeshapps.drexelstudybuddies.Models.Group;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,5 +70,53 @@ public class Utils {
                 sortedGroups.get(sortedGroups.size()-1).add(group);
             }
         }
+    }
+
+    public static Group ParseObjectToGroup(ParseObject o)
+    {
+        Group g = new Group();
+        g.id = o.getObjectId();
+        g.course = o.getString("Study");
+        g.creator = o.getString("Creator");
+        g.groupName = o.getString("Name");
+        g.location = o.getString("Location");
+        g.description = o.getString("Description");
+        g.startTime = o.getDate("StartTime");
+        g.endTime = o.getDate("EndTime");
+        JSONArray attending = o.getJSONArray("UsersAttending");
+        g.attendingUsers = new String[attending.length()];
+        for(int i=0; i < attending.length(); i++)
+        {
+            try {
+                g.attendingUsers[i] = attending.getString(i);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return g;
+    }
+
+
+    public static ParseObject GroupToParseObject(Group g)
+    {
+        ParseObject study;
+        if(g.id==null)
+        {
+            study = new ParseObject("StudyGroup");
+        }
+        else
+        {
+            study = ParseObject.createWithoutData("StudyGroup", g.id);
+        }
+        study.put("Class", g.course);
+        study.put("Name",g.groupName);
+        study.put("Location",g.location);
+        study.put("Description",g.description);
+        study.put("StartTime",g.startTime);
+        study.put("EndTime",g.endTime);
+        study.put("Authorization", GenAuthorization.GetTokenHeader());
+
+        return study;
     }
 }
