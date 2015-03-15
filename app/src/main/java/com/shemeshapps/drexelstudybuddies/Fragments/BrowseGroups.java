@@ -23,6 +23,9 @@ import java.util.ArrayList;
 public class BrowseGroups extends Fragment {
 
     View parentView;
+    ListStudyGroupAdapter adapter;
+    SearchView searchBox;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -35,9 +38,9 @@ public class BrowseGroups extends Fragment {
                 ((MainActivity)getActivity()).loadScreen(MainActivity.fragments.CREATE);
             }
         });
-        final SearchView searchBox = (SearchView)parentView.findViewById(R.id.browseGroupSearchBox);
+        searchBox = (SearchView)parentView.findViewById(R.id.browseGroupSearchBox);
         SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout)parentView.findViewById(R.id.suggestedStudyListRefresh);
-        final ListStudyGroupAdapter adapter = new ListStudyGroupAdapter(getActivity(),new ArrayList<ParseObject>(),refreshLayout,suggestedGroupsList,"");
+        adapter = new ListStudyGroupAdapter(getActivity(),new ArrayList<ParseObject>(),refreshLayout,suggestedGroupsList,null);
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -65,5 +68,12 @@ public class BrowseGroups extends Fragment {
             }
         });
         return parentView;
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        adapter.loadGroupFromBackend(searchBox.getQuery().toString(),true);
     }
 }

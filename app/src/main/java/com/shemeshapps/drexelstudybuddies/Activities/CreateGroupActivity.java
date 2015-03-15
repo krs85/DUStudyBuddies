@@ -23,6 +23,7 @@ import com.shemeshapps.drexelstudybuddies.NetworkingServices.RequestUtil;
 import com.shemeshapps.drexelstudybuddies.R;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class CreateGroupActivity extends ActionBarActivity {
 
@@ -31,12 +32,14 @@ public class CreateGroupActivity extends ActionBarActivity {
     Button create;
     LinearLayout root;
     private int mYear, mMonth, mDay, mStartHour, mStartMinute, mEndHour,mEndMinute;
+    Group editingGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        editingGroup = (Group) getIntent().getSerializableExtra("group");
 
         txtDate = (EditText)findViewById(R.id.date_txt);
         txtStartTime = (EditText)findViewById(R.id.start_time_txt);
@@ -126,13 +129,43 @@ public class CreateGroupActivity extends ActionBarActivity {
 
         });
 
-
+        if(editingGroup!=null)
+        {
+            setEditingGroup();
+        }
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createGroup();
             }
         });
+    }
+
+
+    private void setEditingGroup()
+    {
+        create.setText("Update");
+        txtGroupName.setText(editingGroup.groupName);
+        txtDate.setText(Utils.formatDate(editingGroup.startTime));
+        txtStartTime.setText(Utils.formatTime(editingGroup.startTime));
+        txtEndTime.setText(Utils.formatTime(editingGroup.endTime));
+        txtLocation.setText(editingGroup.location);
+        txtCourse.setText(editingGroup.course);
+        txtDescr.setText(editingGroup.description);
+
+        Calendar c = new GregorianCalendar();
+        c.setTime(editingGroup.startTime);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+        mMonth = c.get(Calendar.MONTH);
+        mYear = c.get(Calendar.YEAR);
+        mStartHour = c.get(Calendar.HOUR_OF_DAY);
+        mStartMinute = c.get(Calendar.MINUTE);
+
+        Calendar c2 = new GregorianCalendar();
+        c2.setTime(editingGroup.endTime);
+        mEndHour = c2.get(Calendar.HOUR_OF_DAY);
+        mEndMinute = c2.get(Calendar.MINUTE);
+
     }
 
     private void createGroup()
@@ -169,18 +202,19 @@ public class CreateGroupActivity extends ActionBarActivity {
         {
             create.setEnabled(false);
             loading.setVisibility(View.VISIBLE);
-            Group g= new Group();
-            g.course = txtCourse.getText().toString();
-            g.description = txtDescr.getText().toString();
-            g.groupName = txtGroupName.getText().toString();
-            g.location = txtLocation.getText().toString();
+            if(editingGroup== null)
+                editingGroup = new Group();
+            editingGroup.course = txtCourse.getText().toString();
+            editingGroup.description = txtDescr.getText().toString();
+            editingGroup.groupName = txtGroupName.getText().toString();
+            editingGroup.location = txtLocation.getText().toString();
             Calendar startCal = Calendar.getInstance();
             startCal.set(Calendar.HOUR_OF_DAY,mStartHour);
             startCal.set(Calendar.MINUTE,mStartMinute);
             startCal.set(Calendar.DAY_OF_MONTH,mDay);
             startCal.set(Calendar.MONTH,mMonth);
             startCal.set(Calendar.YEAR,mYear);
-            g.startTime = startCal.getTime();
+            editingGroup.startTime = startCal.getTime();
 
 
             Calendar endCal = Calendar.getInstance();
@@ -189,9 +223,9 @@ public class CreateGroupActivity extends ActionBarActivity {
             endCal.set(Calendar.DAY_OF_MONTH,mDay);
             endCal.set(Calendar.MONTH,mMonth);
             endCal.set(Calendar.YEAR,mYear);
-            g.endTime = endCal.getTime();
+            editingGroup.endTime = endCal.getTime();
 
-            RequestUtil.postStudyGroup(g, new SaveCallback() {
+            RequestUtil.postStudyGroup(editingGroup, new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
                     if(e==null)

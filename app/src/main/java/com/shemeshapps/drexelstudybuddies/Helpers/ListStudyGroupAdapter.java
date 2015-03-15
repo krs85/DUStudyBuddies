@@ -170,7 +170,12 @@ public class ListStudyGroupAdapter extends BaseExpandableListAdapter {
 
         if(showRefresh)
         {
-            refreshLayout.setRefreshing(true);
+            refreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(true);
+                }
+            });
         }
         if(query.equals("MyStudyGroups"))
         {

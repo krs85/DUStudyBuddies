@@ -51,9 +51,17 @@ public class GroupsAttending extends Fragment {
             }
         });
         suggestedGroupsList = (ExpandableListView)parentView.findViewById(R.id.suggestedStudyGroupList);
-        adapter = new ListStudyGroupAdapter(getActivity(),new ArrayList<ParseObject>(),refreshLayout,suggestedGroupsList,"AttendingStudyGroups");
+        adapter = new ListStudyGroupAdapter(getActivity(),new ArrayList<ParseObject>(),refreshLayout,suggestedGroupsList,null);
         suggestedGroupsList.setAdapter(adapter);
         return parentView;
+    }
+
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        adapter.loadGroupFromBackend("AttendingStudyGroups",true);
     }
 
 }

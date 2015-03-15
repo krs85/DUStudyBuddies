@@ -29,6 +29,7 @@ public class SuggestedGroups extends Fragment {
     SwipeRefreshLayout refreshLayout;
     ListStudyGroupAdapter adapter;
     View parentView;
+    SharedPreferences pref;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class SuggestedGroups extends Fragment {
 
 
 
-        final SharedPreferences pref = getActivity().getSharedPreferences("login_data", Context.MODE_PRIVATE);
+        pref = getActivity().getSharedPreferences("login_data", Context.MODE_PRIVATE);
         refreshLayout = (SwipeRefreshLayout)parentView.findViewById(R.id.suggestedStudyListRefresh);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -54,8 +55,15 @@ public class SuggestedGroups extends Fragment {
             }
         });
         suggestedGroupsList = (ExpandableListView)parentView.findViewById(R.id.suggestedStudyGroupList);
-        adapter = new ListStudyGroupAdapter(getActivity(),new ArrayList<ParseObject>(),refreshLayout,suggestedGroupsList,pref.getString("user_classes",""));
+        adapter = new ListStudyGroupAdapter(getActivity(),new ArrayList<ParseObject>(),refreshLayout,suggestedGroupsList,null);
         suggestedGroupsList.setAdapter(adapter);
         return parentView;
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        adapter.loadGroupFromBackend(pref.getString("user_classes",""),true);
     }
 }
