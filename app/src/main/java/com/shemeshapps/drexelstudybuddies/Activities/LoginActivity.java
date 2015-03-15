@@ -30,12 +30,13 @@ public class LoginActivity extends ActionBarActivity {
         final ProgressBar loadingBar = (ProgressBar)findViewById(R.id.login_loading);
         final EditText password = (EditText)findViewById(R.id.password_login);
         final EditText username = (EditText)findViewById(R.id.username_login);
-        Button login = (Button)findViewById(R.id.login_button);
+        final Button login = (Button)findViewById(R.id.login_button);
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadingBar.setVisibility(View.VISIBLE);
+                login.setEnabled(false);
                 RequestUtil.getAuthCode(username.getText().toString(),password.getText().toString(),new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
@@ -49,6 +50,7 @@ public class LoginActivity extends ActionBarActivity {
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),"Incorrect Username or Password",Toast.LENGTH_SHORT).show();
                         loadingBar.setVisibility(View.GONE);
+                        login.setEnabled(true);
                     }
                 });
             }

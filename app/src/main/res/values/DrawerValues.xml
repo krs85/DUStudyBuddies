@@ -5,7 +5,7 @@
     <string-array name="nav_drawer_items">
         <item>Suggested Groups</item>
         <item>Browse Groups</item>
-        <item>My Groups</item>
+        <item>Creaated Groups</item>
         <item>Groups Im Attending</item>
         <item>Create Group</item>
         <item>Logout</item>
@@ -14,8 +14,8 @@
     <array name="nav_drawer_icons">
         <item>@drawable/lightbulb_icon</item>
         <item>@drawable/search_icon</item>
-        <item>@drawable/lightbulb_icon</item>
-        <item>@drawable/lightbulb_icon</item>
+        <item>@drawable/group</item>
+        <item>@drawable/star</item>
         <item>@drawable/add_icon</item>
         <item>@drawable/logout_icon</item>
     </array>
