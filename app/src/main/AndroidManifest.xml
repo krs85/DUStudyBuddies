@@ -23,7 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Activities.MainActivity"
             android:label="@string/title_activity_main" >
@@ -31,6 +30,10 @@
         <activity
             android:name=".Activities.ViewGroupActivity"
             android:label="Study Group Details" >
+        </activity>
+        <activity
+            android:name=".Activities.CreateGroupActivity"
+            android:label="@string/title_activity_create_group" >
         </activity>
     </application>
 

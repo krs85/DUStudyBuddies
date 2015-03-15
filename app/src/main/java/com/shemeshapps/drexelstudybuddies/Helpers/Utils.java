@@ -1,5 +1,8 @@
 package com.shemeshapps.drexelstudybuddies.Helpers;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.parse.ParseObject;
 import com.shemeshapps.drexelstudybuddies.Models.Group;
 
@@ -8,6 +11,7 @@ import org.json.JSONException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -76,23 +80,14 @@ public class Utils {
     {
         Group g = new Group();
         g.id = o.getObjectId();
-        g.course = o.getString("Study");
+        g.course = o.getString("Class");
         g.creator = o.getString("Creator");
         g.groupName = o.getString("Name");
         g.location = o.getString("Location");
         g.description = o.getString("Description");
         g.startTime = o.getDate("StartTime");
         g.endTime = o.getDate("EndTime");
-        JSONArray attending = o.getJSONArray("UsersAttending");
-        g.attendingUsers = new String[attending.length()];
-        for(int i=0; i < attending.length(); i++)
-        {
-            try {
-                g.attendingUsers[i] = attending.getString(i);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+        g.attendingUsers = (List<String>) o.get("UsersAttending");
 
         return g;
     }
@@ -115,8 +110,33 @@ public class Utils {
         study.put("Description",g.description);
         study.put("StartTime",g.startTime);
         study.put("EndTime",g.endTime);
+        study.put("UsersAttending",g.attendingUsers);
         study.put("Authorization", GenAuthorization.GetTokenHeader());
 
         return study;
+    }
+
+    public static boolean amIAttendingGroup(Group g,Context c)
+    {
+        SharedPreferences pref = c.getSharedPreferences("login_data", Context.MODE_PRIVATE);
+        return g.attendingUsers.contains(pref.getString("user_id",""));
+    }
+
+    public static boolean amIAttendingGroup(ParseObject g,Context c)
+    {
+        SharedPreferences pref = c.getSharedPreferences("login_data", Context.MODE_PRIVATE);
+        return ((List<String>)g.get("UsersAttending")).contains(pref.getString("user_id",""));
+    }
+
+    public static boolean didICreateGroup(Group g,Context c)
+    {
+        SharedPreferences pref = c.getSharedPreferences("login_data", Context.MODE_PRIVATE);
+        return g.creator.equals(pref.getString("user_id",""));
+    }
+
+    public static boolean didICreateGroup(ParseObject g,Context c)
+    {
+        SharedPreferences pref = c.getSharedPreferences("login_data", Context.MODE_PRIVATE);
+        return g.getString("Creator").equals(pref.getString("user_id",""));
     }
 }

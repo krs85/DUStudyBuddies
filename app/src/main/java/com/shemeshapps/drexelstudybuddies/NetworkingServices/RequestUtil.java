@@ -113,6 +113,23 @@ public class RequestUtil {
         ParseCloud.callFunctionInBackground("AttendingStudyGroups", params, callback);
     }
 
+    public static void joinStudyGroup(ParseObject p, SaveCallback callback)
+    {
+        List<String> attending = (List<String>) p.get("UsersAttending");
+        SharedPreferences pref = context.getSharedPreferences("login_data", Context.MODE_PRIVATE);
+        attending.add(pref.getString("user_id",""));
+        p.put("UsersAttending",attending);
+        p.saveInBackground(callback);
+    }
+
+    public static void leaveStudyGroup(ParseObject p, SaveCallback callback)
+    {
+        List<String> attending = (List<String>) p.get("UsersAttending");
+        SharedPreferences pref = context.getSharedPreferences("login_data", Context.MODE_PRIVATE);
+        attending.remove(pref.getString("user_id",""));
+        p.put("UsersAttending",attending);
+        p.saveInBackground(callback);
+    }
 
     public static void logout()
     {

@@ -1,6 +1,7 @@
 package com.shemeshapps.drexelstudybuddies.Activities;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.support.v4.widget.DrawerLayout;
@@ -13,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.shemeshapps.drexelstudybuddies.Fragments.BrowseGroups;
-import com.shemeshapps.drexelstudybuddies.Fragments.CreateGroup;
 import com.shemeshapps.drexelstudybuddies.Fragments.GroupsAttending;
 import com.shemeshapps.drexelstudybuddies.Fragments.MyStudyGroups;
 import com.shemeshapps.drexelstudybuddies.Fragments.SuggestedGroups;
@@ -68,7 +68,6 @@ public class MainActivity extends ActionBarActivity {
         appFragments.add(new BrowseGroups());
         appFragments.add(new MyStudyGroups());
         appFragments.add(new GroupsAttending());
-        appFragments.add(new CreateGroup());
 
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         drawerList = (ListView)findViewById(R.id.drawer_list_view);
@@ -101,6 +100,13 @@ public class MainActivity extends ActionBarActivity {
         if(position == fragments.LOGOUT.ordinal())
         {
             RequestUtil.logout();
+        }
+        else if(position == fragments.CREATE.ordinal())
+        {
+            Intent i = new Intent(this, CreateGroupActivity.class);
+            startActivityForResult(i,0);
+            drawerLayout.closeDrawer(Gravity.LEFT);
+            drawerList.setItemChecked(currentFragIndex,true);
         }
         else
         {

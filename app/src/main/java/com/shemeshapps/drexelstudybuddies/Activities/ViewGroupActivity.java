@@ -1,13 +1,22 @@
 package com.shemeshapps.drexelstudybuddies.Activities;
 
+import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Button;
 
+import com.parse.FunctionCallback;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 import com.shemeshapps.drexelstudybuddies.Helpers.Utils;
 import com.shemeshapps.drexelstudybuddies.Models.Group;
+import com.shemeshapps.drexelstudybuddies.NetworkingServices.RequestUtil;
 import com.shemeshapps.drexelstudybuddies.R;
 
 public class ViewGroupActivity extends ActionBarActivity {
@@ -20,27 +29,96 @@ public class ViewGroupActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_group);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Group g = (Group) getIntent().getSerializableExtra("group");
-
+        final Button join = (Button)findViewById(R.id.join_group_button);
+        final Group g = (Group) getIntent().getSerializableExtra("group");
+        final ProgressBar loading = (ProgressBar)findViewById(R.id.group_info_loading);
         TextView txtClass = (TextView) findViewById(R.id.txtClass);
-        txtClass.append(" " + g.course);
+        txtClass.setText("Class: " + g.course);
         TextView txtName = (TextView) findViewById(R.id.txtName);
-        txtName.append(" " + g.groupName);
+        txtName.setText("Name: " + g.groupName);
         TextView txtLocation  = (TextView) findViewById(R.id.txtLocation);
-        txtLocation.append(" " + g.location);
+        txtLocation.setText("Location: " + g.location);
         TextView txtCreator = (TextView) findViewById(R.id.txtCreator);
-        txtCreator.append(" " + g.creator);
+        txtCreator.setText("Creator: " + g.creator);
         TextView txtDate = (TextView) findViewById(R.id.txtDate);
-        txtDate.append(" " + Utils.formatDate(g.startTime));
+        txtDate.setText("Date: " + Utils.formatDate(g.startTime));
         TextView txtTime = (TextView) findViewById(R.id.txtTime);
-        txtTime.append(" " + Utils.formatTime(g.startTime) + "-" + Utils.formatTime(g.endTime));
+        txtTime.setText("Time: " + Utils.formatTime(g.startTime) + " - " + Utils.formatTime(g.endTime));
         TextView txtAttending = (TextView) findViewById(R.id.txtAttending);
-        for(int i = 0; i < g.attendingUsers.length; i++) {
-            txtAttending.append("\n" + g.attendingUsers[i]);
+        txtAttending.setText("People Attending: ");
+        for(int i = 0; i < g.attendingUsers.size(); i++) {
+            txtAttending.append(g.attendingUsers.get(i));
+            if(i!=g.attendingUsers.size()-1)
+            {
+                txtAttending.append(", ");
+            }
         }
         TextView txtDescription = (TextView) findViewById(R.id.txtDescription);
-        txtDescription.append(" " + g.description);
+        txtDescription.setText("Description: " + g.description);
 
+        updateButton(join,g);
+
+
+        join.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Utils.didICreateGroup(g,getApplicationContext()))
+                {
+                    Intent i = new Intent(getApplicationContext(),CreateGroupActivity.class);
+                    i.putExtra("group",g);
+                    startActivity(i);
+                    finish();
+                }
+                else
+                {
+
+                    loading.setVisibility(View.VISIBLE);
+                    SaveCallback callback = new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            updateButton(join, g);
+                            loading.setVisibility(View.GONE);
+
+                            TextView txtAttending = (TextView) findViewById(R.id.txtAttending);
+                            txtAttending.setText("People Attending: ");
+                            for(int i = 0; i < g.attendingUsers.size(); i++) {
+                                txtAttending.append(g.attendingUsers.get(i));
+                                if(i!=g.attendingUsers.size()-1)
+                                {
+                                    txtAttending.append(", ");
+                                }
+                            }
+                        }
+                    };
+
+                    if(Utils.amIAttendingGroup(g,getApplicationContext())) {
+
+                        RequestUtil.leaveStudyGroup(Utils.GroupToParseObject(g), callback);
+                    }
+                    else
+                    {
+                        RequestUtil.joinStudyGroup(Utils.GroupToParseObject(g), callback);
+                    }
+                }
+
+            }
+        });
+    }
+
+    private void updateButton(Button join, Group g)
+    {
+        if(Utils.didICreateGroup(g,this))
+        {
+            join.setText("Edit Group");
+        }
+        else if(Utils.amIAttendingGroup(g,this))
+        {
+            join.setText("Leave Group");
+        }
+        else
+        {
+            join.setText("Join Group");
+        }
     }
 
     @Override
