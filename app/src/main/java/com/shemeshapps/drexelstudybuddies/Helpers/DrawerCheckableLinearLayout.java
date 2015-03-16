@@ -43,17 +43,17 @@ public class DrawerCheckableLinearLayout extends LinearLayout implements Checkab
     public void setChecked(boolean checked) {
         isChecked = checked;
         if (checked) {
-            textView.setTextColor(getResources().getColor(android.R.color.white));
+            //textView.setTextColor(getResources().getColor(android.R.color.white));
             textView.setTypeface(null, Typeface.BOLD);
-            imageView.setColorFilter(getResources().getColor(android.R.color.white));
-            background.setBackgroundColor(getResources().getColor(R.color.drexel_blue));
+            //imageView.setColorFilter(getResources().getColor(android.R.color.white));
+            background.setBackgroundColor(getResources().getColor(R.color.drexel_yellow));
         }
         else
         {
-            textView.setTextColor(getResources().getColor(R.color.drawer_item_grey));
+            //textView.setTextColor(getResources().getColor(R.color.drawer_item_grey));
             textView.setTypeface(null, Typeface.NORMAL);
-            imageView.setColorFilter(getResources().getColor(R.color.drawer_item_grey));
-            background.setBackgroundColor(getResources().getColor(android.R.color.white));
+            //imageView.setColorFilter(getResources().getColor(R.color.drawer_item_grey));
+            background.setBackgroundColor(getResources().getColor(R.color.drexel_blue));
         }
     }
 
