@@ -33,7 +33,7 @@
         </activity>
         <activity
             android:name=".Activities.CreateGroupActivity"
-            android:label="@string/title_activity_create_group" >
+            android:label="Create Group" >
         </activity>
     </application>
 

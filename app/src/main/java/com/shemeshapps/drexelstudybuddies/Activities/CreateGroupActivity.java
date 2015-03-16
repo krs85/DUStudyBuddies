@@ -148,7 +148,7 @@ public class CreateGroupActivity extends ActionBarActivity {
     private void setEditingGroup()
     {
         create.setText("Update");
-
+        getSupportActionBar().setTitle("Update Group");
         txtGroupName.setText(editingGroup.groupName);
         txtDate.setText(Utils.formatDate(editingGroup.startTime));
         txtStartTime.setText(Utils.formatTime(editingGroup.startTime));
