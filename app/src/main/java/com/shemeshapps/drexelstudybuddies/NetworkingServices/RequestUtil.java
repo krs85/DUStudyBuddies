@@ -101,7 +101,7 @@ public class RequestUtil {
     public static void deleteStudyGroup(String groupId,FunctionCallback callback)
     {
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("group", groupId);
+        params.put("GroupId", groupId);
         params.put("Authorization", GenAuthorization.GetTokenHeader());
         ParseCloud.callFunctionInBackground("DeleteStudyGroup", params, callback);
     }

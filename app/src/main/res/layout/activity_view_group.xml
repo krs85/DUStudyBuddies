@@ -78,6 +78,17 @@
         android:id="@+id/join_group_button"
         android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Group"
+        android:visibility="gone"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:id="@+id/delete_group"
+        />
+
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

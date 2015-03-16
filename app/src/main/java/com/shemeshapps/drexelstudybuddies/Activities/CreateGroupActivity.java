@@ -33,7 +33,7 @@ public class CreateGroupActivity extends ActionBarActivity {
 
     EditText txtDate, txtStartTime, txtEndTime, txtGroupName, txtLocation, txtCourse, txtDescr;
     ProgressBar loading;
-    Button create,delete;
+    Button create;
     LinearLayout root;
     private int mYear, mMonth, mDay, mStartHour, mStartMinute, mEndHour,mEndMinute;
     Group editingGroup;
@@ -44,7 +44,6 @@ public class CreateGroupActivity extends ActionBarActivity {
         setContentView(R.layout.activity_create_group);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         editingGroup = (Group) getIntent().getSerializableExtra("group");
-        delete = (Button)findViewById(R.id.delete_group);
         txtDate = (EditText)findViewById(R.id.date_txt);
         txtStartTime = (EditText)findViewById(R.id.start_time_txt);
         txtEndTime = (EditText) findViewById(R.id.end_time_txt);
@@ -149,40 +148,7 @@ public class CreateGroupActivity extends ActionBarActivity {
     private void setEditingGroup()
     {
         create.setText("Update");
-        delete.setVisibility(View.VISIBLE);
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(CreateGroupActivity.this)
-                        .setTitle("Delete Group?")
-                        .setMessage("Are you sure you want to delete this study group?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                create.setEnabled(false);
-                                loading.setVisibility(View.VISIBLE);
-                                delete.setEnabled(false);
-                                RequestUtil.deleteStudyGroup(editingGroup.id,new FunctionCallback() {
-                                    @Override
-                                    public void done(Object o, ParseException e) {
-                                        finish();
-                                    }
 
-                                    @Override
-                                    public void done(Object o, Throwable throwable) {
-                                        finish();
-                                    }
-                                });
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-            }
-        });
         txtGroupName.setText(editingGroup.groupName);
         txtDate.setText(Utils.formatDate(editingGroup.startTime));
         txtStartTime.setText(Utils.formatTime(editingGroup.startTime));
@@ -225,16 +191,6 @@ public class CreateGroupActivity extends ActionBarActivity {
                 }
             }
         }
-
-        /*
-        HERE TO CHECK FOR IF END TIME IS BEFORE START,
-        START TIME IS NOT BEFORE RIGHT NOW,
-        STUDY TIME IS AT LEAST 30 MIN
-        NOT MORE THAN 2 WEEKS AHEAD OF TIME
-
-        if so do ex: txtEndTime.setError("Start time before end");
-                     missingField = true;
-         */
 
         if(!missingField)
         {
