@@ -1,7 +1,9 @@
 package com.shemeshapps.drexelstudybuddies.Activities;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.parse.FunctionCallback;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
 import com.shemeshapps.drexelstudybuddies.Helpers.Utils;
@@ -30,7 +33,7 @@ public class CreateGroupActivity extends ActionBarActivity {
 
     EditText txtDate, txtStartTime, txtEndTime, txtGroupName, txtLocation, txtCourse, txtDescr;
     ProgressBar loading;
-    Button create;
+    Button create,delete;
     LinearLayout root;
     private int mYear, mMonth, mDay, mStartHour, mStartMinute, mEndHour,mEndMinute;
     Group editingGroup;
@@ -41,7 +44,7 @@ public class CreateGroupActivity extends ActionBarActivity {
         setContentView(R.layout.activity_create_group);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         editingGroup = (Group) getIntent().getSerializableExtra("group");
-
+        delete = (Button)findViewById(R.id.delete_group);
         txtDate = (EditText)findViewById(R.id.date_txt);
         txtStartTime = (EditText)findViewById(R.id.start_time_txt);
         txtEndTime = (EditText) findViewById(R.id.end_time_txt);
@@ -146,6 +149,40 @@ public class CreateGroupActivity extends ActionBarActivity {
     private void setEditingGroup()
     {
         create.setText("Update");
+        delete.setVisibility(View.VISIBLE);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(CreateGroupActivity.this)
+                        .setTitle("Delete Group?")
+                        .setMessage("Are you sure you want to delete this study group?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                create.setEnabled(false);
+                                loading.setVisibility(View.VISIBLE);
+                                delete.setEnabled(false);
+                                RequestUtil.deleteStudyGroup(editingGroup.id,new FunctionCallback() {
+                                    @Override
+                                    public void done(Object o, ParseException e) {
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void done(Object o, Throwable throwable) {
+                                        finish();
+                                    }
+                                });
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
         txtGroupName.setText(editingGroup.groupName);
         txtDate.setText(Utils.formatDate(editingGroup.startTime));
         txtStartTime.setText(Utils.formatTime(editingGroup.startTime));
