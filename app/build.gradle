@@ -31,8 +31,6 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.5.0'
     compile 'com.fasterxml.jackson.core:jackson-core:2.5.0'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.5.0'
-    compile files('/Users/Tomer/AndroidStudioProjects/du-study-buddies/libs/Parse-1.8.3.jar')
-    compile files('/Users/Tomer/AndroidStudioProjects/du-study-buddies/libs/bolts-android-1.1.4.jar')
-    compile files('/home/bret/du-study-buddies/libs/bolts-android-1.1.4.jar')
-    compile files('/home/bret/du-study-buddies/libs/Parse-1.8.3.jar')
+    compile files('src/libs/Parse-1.8.3.jar')
+    compile files('src/libs/bolts-android-1.1.4.jar')
 }
