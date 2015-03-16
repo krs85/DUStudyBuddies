@@ -23,6 +23,7 @@ import com.shemeshapps.drexelstudybuddies.NetworkingServices.RequestUtil;
 import com.shemeshapps.drexelstudybuddies.R;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class CreateGroupActivity extends ActionBarActivity {
@@ -200,14 +201,16 @@ public class CreateGroupActivity extends ActionBarActivity {
 
         if(!missingField)
         {
-            create.setEnabled(false);
-            loading.setVisibility(View.VISIBLE);
+            boolean timerError = false;
+            long studyTime;
+            final long minStudyTime = 30L * 60 * 1000;
+            final int maxDays = 14;
+            Date maxStartDate;
+
+
             if(editingGroup== null)
                 editingGroup = new Group();
-            editingGroup.course = txtCourse.getText().toString();
-            editingGroup.description = txtDescr.getText().toString();
-            editingGroup.groupName = txtGroupName.getText().toString();
-            editingGroup.location = txtLocation.getText().toString();
+
             Calendar startCal = Calendar.getInstance();
             startCal.set(Calendar.HOUR_OF_DAY,mStartHour);
             startCal.set(Calendar.MINUTE,mStartMinute);
@@ -215,7 +218,6 @@ public class CreateGroupActivity extends ActionBarActivity {
             startCal.set(Calendar.MONTH,mMonth);
             startCal.set(Calendar.YEAR,mYear);
             editingGroup.startTime = startCal.getTime();
-
 
             Calendar endCal = Calendar.getInstance();
             endCal.set(Calendar.HOUR_OF_DAY,mEndHour);
@@ -225,22 +227,63 @@ public class CreateGroupActivity extends ActionBarActivity {
             endCal.set(Calendar.YEAR,mYear);
             editingGroup.endTime = endCal.getTime();
 
-            RequestUtil.postStudyGroup(editingGroup, new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if(e==null)
-                    {
-                        finish();
-                    }
-                    else
-                    {
-                        create.setEnabled(true);
-                        loading.setVisibility(View.GONE);
-                        Toast.makeText(getApplicationContext(),"An error has occurred",Toast.LENGTH_SHORT).show();
-                    }
+            Calendar maxCal = Calendar.getInstance();
+            maxCal.add(Calendar.DAY_OF_YEAR, maxDays);
+            maxStartDate = maxCal.getTime();
 
-                }
-            });
+            studyTime = (editingGroup.endTime.getTime() - editingGroup.startTime.getTime());
+
+            if(editingGroup.endTime.before(editingGroup.startTime))
+            {
+                txtEndTime.setError("End time is before start time");
+                timerError = true;
+            }
+
+            if(editingGroup.startTime.before(new Date()))
+            {
+                txtStartTime.setError("Start time is before current time");
+                timerError = true;
+            }
+
+            if(studyTime < minStudyTime)
+            {
+                txtEndTime.setError("Study time is less than " + minStudyTime/(60 * 1000) + " minutes");
+                timerError = true;
+            }
+
+            if(editingGroup.startTime.after(maxStartDate))
+            {
+                txtDate.setError("Start time is more than " + maxDays + " days from current time");
+                timerError = true;
+            }
+
+            if(!timerError)
+            {
+                create.setEnabled(false);
+                loading.setVisibility(View.VISIBLE);
+                editingGroup.course = txtCourse.getText().toString();
+                editingGroup.description = txtDescr.getText().toString();
+                editingGroup.groupName = txtGroupName.getText().toString();
+                editingGroup.location = txtLocation.getText().toString();
+
+                RequestUtil.postStudyGroup(editingGroup, new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e==null)
+                        {
+                            finish();
+                        }
+                        else
+                        {
+                            create.setEnabled(true);
+                            loading.setVisibility(View.GONE);
+                            Toast.makeText(getApplicationContext(),"An error has occurred",Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+            }
+
 
         }
     }
